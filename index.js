@@ -5,9 +5,12 @@ const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 
+var employeeBoolean = true;
+
 teamProfile = [];
 
-inquirer.prompt([
+function managerPrompt(){
+return inquirer.prompt([
     {
     type: "input",
     name: 'managerName',
@@ -28,17 +31,27 @@ inquirer.prompt([
     name: 'manager_office_number',
     message: "What is your office number?",
     },
-    {
-    type: "confirm",
-    name: 'employeeConfirm',
-    message: "Add an employee?",
-    },
 ])
-.then(managerData => {
-    const Manager = new Manager (managerData.managerName, managerData.managerId, managerData.managerEmail, managerData.manager_office_number)
-    teamProfile.push(Manager)
-    console.log("manager added")
-    do {
+.then((managerData) => {
+    const manager = new Manager(managerData.managerName, managerData.managerId, managerData.managerEmail, managerData.manager_office_number)
+    teamProfile.push(manager)
+})
+}
+
+
+function addEmployeePrompt(){
+    return inquirer.prompt([
+        {
+            type: "type",
+            name: "employeeAdd",
+            message: "How many employee do you want to add?",
+        }
+    ]).then((data) => {
+        return data.employeeAdd
+    })
+}
+
+function employeePrompt(){
         inquirer.prompt([
             {
             type: "rawlist",
@@ -70,15 +83,10 @@ inquirer.prompt([
                     name: 'engineerGithub',
                     message: "What is your Github?",
                     },
-                    {
-                    type: "confirm",
-                    name: 'employeeConfirm',
-                    message: "Add another employee?",
-                    },
                 ])
                 .then((engineerData) => {
-                var Engineer = new Engineer(engineerData.engineerName, engineerData.engineerId, engineerData.engineerEmail, engineerData.engineerGithub)
-                teamProfile.push(Engineer)
+                var engineer = new Engineer(engineerData.engineerName, engineerData.engineerId, engineerData.engineerEmail, engineerData.engineerGithub)
+                teamProfile.push(engineer)
                 })
             }
             else {
@@ -103,19 +111,23 @@ inquirer.prompt([
                     name: 'internSchool',
                     message: "What is your school?",
                     },
-                    {
-                    type: "confirm",
-                    name: 'employeeConfirm',
-                    message: "Add another employee?",
-                    },
                 ])
                 .then((internData) => {
-                    var Intern = new Intern(internData.internData, internData.internId, internData.internEmail, internData.internSchool)
-                    teamProfile.push(Intern)
+                    var intern = new Intern(internData.internName, internData.internId, internData.internEmail, internData.internSchool)
+                    teamProfile.push(intern)
                 })
             }
         })
     }
-    while(internData.employeeConfirm || engineerData.employeeConfirm)
-})
 
+
+async function main(){
+    await managerPrompt()
+    var x = await addEmployeePrompt()
+    for (var i = 0; i <= x; i++){
+        return employeePrompt()
+    }
+    
+}
+
+main()
