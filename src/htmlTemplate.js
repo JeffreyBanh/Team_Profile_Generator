@@ -1,4 +1,4 @@
-const generateManager = function (manager) {
+function generateManager (manager) {
     return `
     <div class="col-4 mt-4">
         <div class="card h-100">
@@ -17,7 +17,7 @@ const generateManager = function (manager) {
 }
 
 // create Engineer card
-const generateEngineer = function (engineer) {
+function generateEngineer (engineer) {
     return `
     <div class="col-4 mt-4">
         <div class="card h-100">
@@ -36,7 +36,7 @@ const generateEngineer = function (engineer) {
 }
 
 // create Intern card 
-const generateIntern = function (intern) {
+function generateIntern (intern) {
     return `
     <div class="col-4 mt-4">
         <div class="card h-100">
@@ -54,7 +54,7 @@ const generateIntern = function (intern) {
 };
 
 // generate html page 
-const generateTeamPage = function (employeeCards) {   
+function generate_team_page (employeeCards) {   
     return`
     <!DOCTYPE html>
     <html lang="en">

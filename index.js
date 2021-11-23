@@ -4,11 +4,10 @@ const fs = require('fs');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
+const htmlTemplate = require("./src/htmlTemplate");
 
-var employeeBoolean = true;
-
+let repeat = true;
 teamProfile = [];
-
 function managerPrompt(){
 return inquirer.prompt([
     {
@@ -42,17 +41,18 @@ return inquirer.prompt([
 function addEmployeePrompt(){
     return inquirer.prompt([
         {
-            type: "type",
+            type: "confirm",
             name: "employeeAdd",
-            message: "How many employee do you want to add?",
+            message: "Add employee?",
         }
     ]).then((data) => {
         return data.employeeAdd
     })
 }
 
-function employeePrompt(){
-        inquirer.prompt([
+async function employeePrompt(){
+        do{ 
+        await inquirer.prompt([
             {
             type: "rawlist",
             name: 'employeeChoice',
@@ -60,9 +60,9 @@ function employeePrompt(){
             message: "Choose an option",
             }
         ])
-        .then((employeeData) => {
+        .then(async (employeeData) => {
             if (employeeData.employeeChoice == "Engineer"){
-                inquirer.prompt([
+                await inquirer.prompt([
                     {
                     type: "input",
                     name: 'engineerName',
@@ -84,13 +84,13 @@ function employeePrompt(){
                     message: "What is your Github?",
                     },
                 ])
-                .then((engineerData) => {
+                .then(async (engineerData) => {
                 var engineer = new Engineer(engineerData.engineerName, engineerData.engineerId, engineerData.engineerEmail, engineerData.engineerGithub)
                 teamProfile.push(engineer)
                 })
             }
             else {
-                inquirer.prompt([
+                await inquirer.prompt([
                     {
                     type: "input",
                     name: 'internName',
@@ -112,22 +112,65 @@ function employeePrompt(){
                     message: "What is your school?",
                     },
                 ])
-                .then((internData) => {
+                .then(async (internData) => {
                     var intern = new Intern(internData.internName, internData.internId, internData.internEmail, internData.internSchool)
                     teamProfile.push(intern)
                 })
             }
         })
-    }
+        repeat = (
+            await inquirer.prompt([
+            {
+                type: "confirm",
+                name: "repeat",
+                message: "Do you want to add another employee?",
+            },
+            ])
+        ).repeat;
+    }while(repeat)}
 
+function generateCard(data){
+    var cardArray = [];
+    var generatedHtml;
+    for (var i = 0; i < data.length; i++){
+        if (data[i].getRole() == 'Manager'){
+            cardArray.push(htmlTemplate.generateManager(data[i]))
+        }
+        else if (data[i].getRole() == "Engineer"){
+            cardArray.push(htmlTemplate.generateEngineer(data[i]))
+        }
+        else if (data[i].getRole() == "intern"){
+            cardArray.push(htmlTemplate.generateIntern(data[i]))
+        }
+    }
+    return (cardArray)
+}
+
+function writeFile(data){
+
+    fs.writeFile('.dist/index.html', htmlTemplate.generateHtml(generateCard(data)), err => {
+        // if there is an error 
+        if (err) {
+            console.log(err);
+            return;
+        // when the profile has been created 
+        } else {
+            console.log("Your team profile has been successfully created! Please check out the index.html")
+        }
+    }),
+}
 
 async function main(){
     await managerPrompt()
     var x = await addEmployeePrompt()
-    for (var i = 0; i <= x; i++){
-        return employeePrompt()
+    if(x){
+    await employeePrompt()
     }
-    
+    await hi()
 }
 
 main()
+
+
+
+
