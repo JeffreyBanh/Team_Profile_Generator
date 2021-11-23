@@ -1,4 +1,4 @@
-function generateManager (manager) {
+exports.generateManager = function (manager) {
     return `
     <div class="col-4 mt-4">
         <div class="card h-100">
@@ -17,7 +17,7 @@ function generateManager (manager) {
 }
 
 // create Engineer card
-function generateEngineer (engineer) {
+exports.generateEngineer = function (engineer) {
     return `
     <div class="col-4 mt-4">
         <div class="card h-100">
@@ -36,7 +36,7 @@ function generateEngineer (engineer) {
 }
 
 // create Intern card 
-function generateIntern (intern) {
+exports.generateIntern = function (intern) {
     return `
     <div class="col-4 mt-4">
         <div class="card h-100">
@@ -47,14 +47,14 @@ function generateIntern (intern) {
             <div class="card-body">
                 <p class="id">ID: ${intern.Id}</p>
                 <p class="email">Email:<a href="mailto:${intern.Email}">${intern.Email}</a></p>
-                <p class="school">School: ${intern.School}</p>
+                <p class="school">School: ${intern.school}</p>
             </div>
     </div>
 </div>    `
 };
 
 // generate html page 
-function generate_team_page (employeeCards) {   
+exports.generate_team_page = function (employeeCards) {   
     return`
     <!DOCTYPE html>
     <html lang="en">
@@ -90,6 +90,3 @@ function generate_team_page (employeeCards) {
     </html>
 `;
 }
-
-  // export to index
-module.exports = htmlTemplate; 

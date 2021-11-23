@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
+
+
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
@@ -8,6 +10,7 @@ const htmlTemplate = require("./src/htmlTemplate");
 
 let repeat = true;
 teamProfile = [];
+
 function managerPrompt(){
 return inquirer.prompt([
     {
@@ -131,7 +134,6 @@ async function employeePrompt(){
 
 function generateCard(data){
     var cardArray = [];
-    var generatedHtml;
     for (var i = 0; i < data.length; i++){
         if (data[i].getRole() == 'Manager'){
             cardArray.push(htmlTemplate.generateManager(data[i]))
@@ -139,7 +141,7 @@ function generateCard(data){
         else if (data[i].getRole() == "Engineer"){
             cardArray.push(htmlTemplate.generateEngineer(data[i]))
         }
-        else if (data[i].getRole() == "intern"){
+        else if (data[i].getRole() == "Intern"){
             cardArray.push(htmlTemplate.generateIntern(data[i]))
         }
     }
@@ -148,7 +150,7 @@ function generateCard(data){
 
 function writeFile(data){
 
-    fs.writeFile('.dist/index.html', htmlTemplate.generateHtml(generateCard(data)), err => {
+    fs.writeFile('./dist/index.html', htmlTemplate.generate_team_page(generateCard(data)), err => {
         // if there is an error 
         if (err) {
             console.log(err);
@@ -157,7 +159,7 @@ function writeFile(data){
         } else {
             console.log("Your team profile has been successfully created! Please check out the index.html")
         }
-    }),
+    })
 }
 
 async function main(){
@@ -166,7 +168,7 @@ async function main(){
     if(x){
     await employeePrompt()
     }
-    await hi()
+    await writeFile(teamProfile)
 }
 
 main()
